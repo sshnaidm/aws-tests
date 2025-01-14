@@ -1,0 +1,10 @@
+**/private-ssh-key
+**/public-ssh-key
+**/git-password
+**/pull-secret.json
+**/git-password
+aws-spoke-cluster-setup/manifests/*-apply.yaml
+gitops/ztp/out
+cluster-gitops-config/repo/policy
+cluster-gitops-config/repo/site-config
+cluster-gitops-config/repo/.git

@@ -1,0 +1,96 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gitea
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: gitea-data-pvc
+  namespace: gitea
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gitea
+  namespace: gitea
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: gitea
+  template:
+    metadata:
+      labels:
+        app: gitea
+    spec:
+      containers:
+        - name: gitea
+          image: quay.io/telco5gci/custom-gitea:latest
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: gitea-data
+              mountPath: /data
+          env:
+            - name: GITEA_CUSTOM
+              value: "/data/gitea"
+            - name: GITEA__repository__ENABLE_PUSH_CREATE_USER
+              value: "true"
+            - name: GITEA__repository__ENABLE_PUSH_CREATE_ORG
+              value: "true"
+            - name: GITEA__repository__ONLY_ALLOW_PUSH_IF_GITEA_ENVIRONMENT_SET
+              value: "false"
+            - name: GITEA__security__INSTALL_LOCK
+              value: "true"
+            - name: GITEA__service__DISABLE_REGISTRATION
+              value: "true"
+            - name: GITEA__repository__FORCE_PRIVATE
+              value: "false"
+            - name: GITEA__repository__DEFAULT_PRIVATE
+              value: "public"
+            - name: GITEA__repository__DEFAULT_PUSH_CREATE_PRIVATE
+              value: "false"
+      volumes:
+        - name: gitea-data
+          persistentVolumeClaim:
+            claimName: gitea-data-pvc
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: gitea-web
+  namespace: gitea
+  labels:
+    app: gitea
+spec:
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: ClusterIP
+  selector:
+    app: gitea
+---
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: gitea
+  namespace: gitea
+spec:
+  # host: gitea.<Ingress_Domain>
+  to:
+    kind: Service
+    name: gitea-web
+    # weight: 100
+  tls:
+    termination: edge
+  # wildcardPolicy: None

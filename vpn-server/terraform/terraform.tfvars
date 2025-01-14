@@ -1,0 +1,9 @@
+aws_region             = "us-east-1"
+server_additional_tags = { "Policy" : "skip", "Name" : "sshnaidm-vpn-server" }
+key_name               = "sshnaidm-key"
+ami_user               = "ec2-user"
+amis_os_map_regex      = "^amzn2-ami.*hvm-.*-x86_64-gp2"
+instance_type          = "t3.medium"
+aws_profile            = "telco-ci"
+subnet_cluster         = "subnet-02ba1ba58bfcdcac9"
+vpn_subnet_cidr        = "10.0.30.0/24"

@@ -1,0 +1,84 @@
+---
+apiVersion: agent.open-cluster-management.io/v1
+kind: KlusterletAddonConfig
+metadata:
+  name: '${CLUSTER_NAME}'
+  namespace: '${CLUSTER_NAME}'
+spec:
+  clusterName: '${CLUSTER_NAME}'
+  clusterNamespace: '${CLUSTER_NAME}'
+  clusterLabels:
+    cloud: Amazon
+    vendor: OpenShift
+  applicationManager:
+    enabled: true
+  policyController:
+    enabled: true
+  searchCollector:
+    enabled: true
+  certPolicyController:
+    enabled: true
+---
+apiVersion: hive.openshift.io/v1
+kind: MachinePool
+metadata:
+  name: ${CLUSTER_NAME}-worker
+  namespace: '${CLUSTER_NAME}'
+spec:
+  clusterDeploymentRef:
+    name: '${CLUSTER_NAME}'
+  name: worker
+  platform:
+    aws:
+      rootVolume:
+        iops: 2000
+        size: 100
+        type: io1
+      type: m5.xlarge
+  replicas: 3
+---
+apiVersion: cluster.open-cluster-management.io/v1
+kind: ManagedCluster
+metadata:
+  labels:
+    cloud: Amazon
+    region: us-east-1
+    name: '${CLUSTER_NAME}'
+    vendor: OpenShift
+    cluster.open-cluster-management.io/clusterset: 'default'
+  name: '${CLUSTER_NAME}'
+spec:
+  hubAcceptsClient: true
+---
+apiVersion: hive.openshift.io/v1
+kind: ClusterDeployment
+metadata:
+  name: '${CLUSTER_NAME}'
+  namespace: '${CLUSTER_NAME}'
+  labels:
+    cloud: 'AWS'
+    region: 'us-east-1'
+    vendor: OpenShift
+    cluster.open-cluster-management.io/clusterset: 'default'
+spec:
+  baseDomain: telco5g-ci.devcluster.openshift.com
+  clusterName: '${CLUSTER_NAME}'
+  controlPlaneConfig:
+    servingCertificates: {}
+  installAttemptsLimit: 1
+  installed: false
+  platform:
+    aws:
+      credentialsSecretRef:
+        name: ${CLUSTER_NAME}-aws-creds
+      region: us-east-1
+  provisioning:
+    installConfigSecretRef:
+      name: ${CLUSTER_NAME}-install-config
+    sshPrivateKeySecretRef:
+      name: ${CLUSTER_NAME}-ssh-private-key
+    imageSetRef:
+       #quay.io/openshift-release-dev/ocp-release:4.16.25-multi
+      name: img4.16.25-multi-appsub
+  pullSecretRef:
+    name: ${CLUSTER_NAME}-pull-secret
