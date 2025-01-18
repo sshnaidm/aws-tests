@@ -1,0 +1,73 @@
+apiVersion: ran.openshift.io/v1
+kind: SiteConfig
+metadata:
+  name: "${CLUSTER_NAME}"
+  namespace: "${CLUSTER_NAME}"
+spec:
+  baseDomain: "$LOCAl_DOMAIN"
+  pullSecretRef:
+    name: "assisted-deployment-pull-secret"
+  clusterImageSetNameRef: "img4.16.8-x86-64-appsub"
+  sshPublicKey: "$PUBLIC_SSH_KEY"
+  clusters:
+  - clusterName: "${CLUSTER_NAME}"
+    clusterType: sno
+    clusterProfile: du
+    networkType: "OVNKubernetes"
+    # cpuPartitioningMode: AllNodes
+    # extraManifestPath: ${CLUSTER_NAME}-sno/extra-manifests
+    clusterLabels:
+      common-${CLUSTER_NAME}: true
+      group-${CLUSTER_NAME}: ""
+      sites : "${CLUSTER_NAME}-sno"
+    clusterNetwork:
+      - cidr: 10.128.0.0/14
+        hostPrefix: 23
+    serviceNetwork:
+      - 172.30.0.0/16
+    machineNetwork:
+      - cidr: 10.6.105.0/24
+    additionalNTPSources:
+      - clock.redhat.com
+    nodes:
+      - hostName: "${CLUSTER_NAME}"
+        bmcAddress: "redfish-virtualmedia+http://${VPN_INTERNAL_HOST_IP}:9000/redfish/v1/Systems/local/${CLUSTER_NAME}"
+        bmcCredentialsName:
+          name: "${CLUSTER_NAME}-bmh-secret"
+        bootMACAddress: "${CLUSTER_INTERNAL_MAC}"
+        bootMode: "UEFI"
+        nodeNetwork:
+          interfaces:
+            - name: "ens3"
+              macAddress: "${CLUSTER_INTERNAL_MAC}"
+          config:
+            interfaces:
+              - name: "ens3"
+                type: ethernet
+                state: up
+                ipv4:
+                  enabled: true
+                  address:
+                    - ip: $CLUSTER_INTERNAL_HOST_IP
+                      prefix-length: 24
+                  dhcp: false
+                ipv6:
+                  enabled: false
+            dns-resolver:
+              config:
+                search:
+                  - "t5g-dev.eng.rdu2.dc.redhat.com"
+                server:
+                  - ${VPN_INTERNAL_HOST_IP}
+                  # - dns1
+                  # - dns2
+            routes:
+              config:
+                - destination: 0.0.0.0/0
+                  next-hop-address: $CLUSTER_INTERNAL_GW_IP
+                  next-hop-interface: "ens3"
+                  table-id: 254
+                - destination: 10.0.0.0/22
+                  next-hop-address: ${VPN_INTERNAL_HOST_IP}
+                  next-hop-interface: "ens3"
+                  table-id: 254

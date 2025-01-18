@@ -5,7 +5,7 @@ metadata:
     argocd.argoproj.io/sync-wave: '1'
     infraenv.agent-install.openshift.io/enable-ironic-agent: 'true'
     kubectl.kubernetes.io/last-applied-configuration: >
-      {"apiVersion":"agent-install.openshift.io/v1beta1","kind":"InfraEnv","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"1","ran.openshift.io/ztp-gitops-generated":"{}"},"labels":{"app.kubernetes.io/instance":"clusters"},"name":"sno1","namespace":"sno1"},"spec":{"additionalNTPSources":["clock.redhat.com"],"clusterRef":{"name":"sno1","namespace":"sno1"},"nmStateConfigLabelSelector":{"matchLabels":{"nmstate-label":"sno1"}},"pullSecretRef":{"name":"assisted-deployment-pull-secret"},"sshAuthorizedKey":"ssh-rsa
+      {"apiVersion":"agent-install.openshift.io/v1beta1","kind":"InfraEnv","metadata":{"annotations":{"argocd.argoproj.io/sync-wave":"1","ran.openshift.io/ztp-gitops-generated":"{}"},"labels":{"app.kubernetes.io/instance":"clusters"},"name":"sno-cluster","namespace":"sno-cluster"},"spec":{"additionalNTPSources":["clock.redhat.com"],"clusterRef":{"name":"sno-cluster","namespace":"sno-cluster"},"nmStateConfigLabelSelector":{"matchLabels":{"nmstate-label":"sno-cluster"}},"pullSecretRef":{"name":"assisted-deployment-pull-secret"},"sshAuthorizedKey":"ssh-rsa
       AAAAB3NzaC1yc2EAAAADAQABAAABgQDfo9QM5zLeAYmsPghS+ysDmtE5yu4AWBWc+ioeZ2oSY0FMlgk4sg0KOZZo6tw1w8RBr0rf+l3I590M/HuX4vwo8Vyw0BvJhFAJ6xOkMQKsC959ql0y0hS8HNa9SKzRCDt3ZouOdBTI4b+J2lOJtPOMieKvJCNZB19hE6kYev8W19hc+y6JiPJHOiDGhKxuX+pXqZAFOxS73Tn6ZggZNKJhDzWub48doYxwKQq5vBWjdAEi5Q2hMsbkWvTVgpGBbSW7CvPqmnuSGCs2um0/WOnW6OoWZ7O3MBlDyhFh3AsN/drlrPW4G7QP98jYi5CTl6AjBy2PO2n5MQjFahrGJX5z9r4cJ051evh3n7OiAXdkon7yf/B3UfHyo/g9KE1ygYj4AXnvwWrtUBPzObOYfCoKgXpUIYl4DhgzBFAJeXacFhKPvv3LaylI/5A6RiDfnsZkKfgV855qam5AX5EnjToprlxMBjGlV0R+AiJyeoaEDgLPD7F+nmUkyfAYJXpuQPs=
       kni@hypervisor"}}
     ran.openshift.io/ztp-gitops-generated: '{}'
@@ -14,15 +14,15 @@ metadata:
   generation: 2
   labels:
     app.kubernetes.io/instance: clusters
-  name: sno1
-  namespace: sno1
+  name: sno-cluster
+  namespace: sno-cluster
   uid: 3ebe5e52-343d-4829-a5c2-3131bc690dfb
 spec:
   additionalNTPSources:
     - clock.redhat.com
   clusterRef:
-    name: sno1
-    namespace: sno1
+    name: sno-cluster
+    namespace: sno-cluster
   cpuArchitecture: x86_64
   ipxeScriptType: DiscoveryImageAlways
   kernelArguments:
@@ -30,7 +30,7 @@ spec:
       value: nameserver=8.8.8.8
   nmStateConfigLabelSelector:
     matchLabels:
-      nmstate-label: sno1
+      nmstate-label: sno-cluster
   pullSecretRef:
     name: assisted-deployment-pull-secret
   sshAuthorizedKey: >-
