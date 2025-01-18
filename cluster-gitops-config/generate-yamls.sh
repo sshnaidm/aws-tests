@@ -32,8 +32,10 @@ export PULL_SECRET=$(cat pull-secret.json)
 export AWS_SPOKE_CLUSTER_NAME="my-aws-cluster"
 export INSTALL_CONFIG=$(cat install-config.yaml | envsubst | base64 -w 0)
 
+mkdir -p repo/aws
 cat templates/aws-secrets.yaml | envsubst > repo/aws/secret-apply.yaml
 cat templates/aws-deploy.yaml | envsubst > repo/aws/deploy-apply.yaml
+cp templates/aws-kustomization.yaml repo/aws/kustomization.yaml
 
 ## Create ArgoCD project and application.
 oc apply -f templates/argocd-project.yaml
