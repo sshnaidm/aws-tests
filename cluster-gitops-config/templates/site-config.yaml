@@ -26,7 +26,7 @@ spec:
     serviceNetwork:
       - 172.30.0.0/16
     machineNetwork:
-      - cidr: 10.6.105.0/24
+      - cidr: $CLUSTER_INTERNAL_CIDR
     additionalNTPSources:
       - clock.redhat.com
     nodes:
@@ -56,7 +56,7 @@ spec:
             dns-resolver:
               config:
                 search:
-                  - "t5g-dev.eng.rdu2.dc.redhat.com"
+                  - "$LOCAl_DOMAIN"
                 server:
                   - ${VPN_INTERNAL_HOST_IP}
                   # - dns1
