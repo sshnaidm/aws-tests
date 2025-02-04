@@ -8,3 +8,4 @@ gitops/ztp/out
 cluster-gitops-config/repo/policy
 cluster-gitops-config/repo/site-config
 cluster-gitops-config/repo/.git
+hub-3node-setup/install-config.yaml

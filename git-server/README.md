@@ -26,11 +26,12 @@ git remote add origin https://root:${MY_GIT_PASS}@${GIT_URL}/root/gitops  # root
 git push origin master
 ```
 
-The user has a password `root` by default, change this:
+The user has a password `root` by default, change this and unset changing password:
 
 ```bash
 export MY_GIT_PASS=$(cat git-password)
 oc exec -it $(oc get pod -n gitea -oname) -n gitea su git -- bash -c "/usr/local/bin/gitea admin user change-password -u root -p $MY_GIT_PASS"
+oc exec -it $(oc get pod -n gitea -oname) -n gitea su git -- bash -c "/usr/local/bin/gitea admin user must-change-password --unset --all"
 ```
 
 Open `https://$GIT_HOST` and log in with your root password to confirm it.

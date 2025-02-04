@@ -62,8 +62,8 @@ And finally prepare repo connection secret and apply:
 ```bash
 export GIT_URL="https://$(oc get route -n gitea -o json | jq -r '.items[0].spec.host')/root/gitops"
 export GIT_REPO_URL="$(echo -n $GIT_URL | base64 -w 0)"
-cat manifests/repo_connect.yaml | envsubst > ztp/out/repo_connect.yaml
-oc apply -f ztp/out/repo_connect.yaml
+cat manifests/repo_connect.yaml | envsubst > out/repo_connect.yaml
+oc apply -f out/repo_connect.yaml
 ```
 
 If you disabled autosync before, that's a time to sync:

@@ -1,9 +1,8 @@
 additionalTrustBundlePolicy: Proxyonly
 apiVersion: v1
-baseDomain: telco5g-ci.devcluster.openshift.com  # your base domain
+baseDomain: $BASE_DOMAIN  # your base domain
 compute:
 - architecture: amd64
-  hyperthreading: Enabled
   name: worker
   platform: {}
   replicas: 0
@@ -14,10 +13,16 @@ controlPlane:
   platform:
     aws:
       type: m6i.4xlarge
-  replicas: 1
+      rootVolume:
+        size: 100
+        iops: 4000
+        type: io1
+      zones:
+      - $AWS_ZONE  # your AWS zone
+  replicas: 3
 metadata:
   creationTimestamp: null
-  name: my-ocp-cluster  # your cluster name
+  name: $CLUSTER_NAME  # your cluster name
 networking:
   clusterNetwork:
   - cidr: 10.128.0.0/14
@@ -29,11 +34,12 @@ networking:
   - 172.30.0.0/16
 platform:
   aws:
-    region: us-east-1
+    region: $AWS_REGION  # your AWS region
     userTags:
+      adminContact: sshnaidm
+      Policy: skip
       propagateUserTags: true
-      owner: myuser
 publish: External
-pullSecret: '<your pull secret>'
+pullSecret: '$PULL_SECRET'
 sshKey: |
-  ssh-rsa AAAAB3N...... - you public key
+  $PUBLIC_SSH_KEY
