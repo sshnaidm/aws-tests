@@ -1,6 +1,6 @@
 apiVersion: v1
 metadata:
-  name: 'sshnaidm-work'
+  name: '$CLUSTER_NAME'
 baseDomain: telco5g-ci.devcluster.openshift.com
 controlPlane:
   hyperthreading: Enabled
@@ -12,10 +12,10 @@ controlPlane:
         iops: 4000
         size: 100
         type: io1
-      type: m5.xlarge
+      type: m5.2xlarge
 compute:
 - hyperthreading: Enabled
-  name: 'worker'
+  name: worker
   replicas: 3
   platform:
     aws:
